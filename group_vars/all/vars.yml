@@ -5,8 +5,9 @@ ollama_models:
   - qwen3.6:35b
 # TODO : maybe Qwen3.6 27B ?
 # TODO : maybe a mistral model ?
+# gpt-oss ?
   - gemma4:12b
-  - qwen3.5:9b
+  - hf.co/bartowski/Qwen_Qwen3.5-9B-GGUF:Q6_K_L
   - qwen3.5:2b
   - qwen2.5:0.5b
 # TODO : uncensored model
