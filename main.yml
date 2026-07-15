@@ -1,0 +1,13 @@
+---
+- name: Playbook
+  hosts: gmktec
+  roles:
+      - role: system
+        tags:
+            - system
+      - role: docker
+        tags:
+            - containers
+      - role: models
+        tags:
+            - models

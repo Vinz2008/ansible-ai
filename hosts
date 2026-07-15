@@ -1,0 +1,2 @@
+[gmktec]
+gmktec ansible_host=TODO ansible_user=vincent ansible_connection=ssh

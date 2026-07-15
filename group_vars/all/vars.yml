@@ -1,0 +1,12 @@
+home_folder: "{{ ansible_user_dir }}"
+comfy_dir: "{{ home_folder }}/ComfyUI"
+ollama_models:
+  - llama3.3:70b
+  - qwen3.6:35b
+# TODO : maybe Qwen3.6 27B ?
+# TODO : maybe a mistral model ?
+  - gemma4:12b
+  - qwen3.5:9b
+  - qwen3.5:2b
+  - qwen2.5:0.5b
+# TODO : uncensored model

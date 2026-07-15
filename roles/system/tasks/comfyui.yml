@@ -1,0 +1,93 @@
+- name: Create ComfyUI data directories
+  ansible.builtin.file:
+    path: "{{ comfy_dir }}"
+    state: directory
+    mode: "0755"
+
+
+- name: Clone ComfyUI
+  ansible.builtin.git:
+    repo: https://github.com/Comfy-Org/ComfyUI
+    dest: "{{ comfy_dir }}/comfyui-git"
+    version: master
+    update: true
+
+- name: Create venv
+  ansible.builtin.command:
+    cmd: "python3 -m venv {{ comfy_dir }}/venv"
+    creates: "{{ comfy_dir }}/venv/bin/python"
+
+- name: Install ROCm PyTorch for Strix Halo
+  ansible.builtin.pip:
+    name:
+      - "rocm[libraries,devel]"
+      - torch
+      - torchvision
+      - torchaudio
+    virtualenv: "{{ comfy_dir }}/venv"
+    extra_args: "--pre --index-url https://rocm.nightlies.amd.com/v2/gfx1151/"
+  notify: Restart ComfyUI
+
+- name: Install ComfyUI requirements
+  ansible.builtin.pip:
+    requirements: "{{ comfy_dir }}/comfyui-git/requirements.txt"
+    virtualenv: "{{ comfy_dir }}/venv"
+  notify: Restart ComfyUI
+
+- name: Create ComfyUI data directories
+  ansible.builtin.file:
+    path: "{{ comfy_dir }}/{{ item }}"
+    state: directory
+    mode: "0755"
+  loop:
+    - input
+    - output
+    - user
+
+
+- name: Create user systemd configuration directory
+  ansible.builtin.file:
+    path: "{{ ansible_user_dir }}/.config/systemd/user"
+    state: directory
+    mode: "0755"
+
+- name: Install ComfyUI user service
+  ansible.builtin.copy:
+    dest: "{{ ansible_user_dir }}/.config/systemd/user/comfyui.service"
+    mode: "0644"
+    content: |
+      [Unit]
+      Description=ComfyUI
+      After=network-online.target
+      Wants=network-online.target
+
+      [Service]
+      WorkingDirectory={{ comfy_dir }}/comfyui-git
+      ExecStart={{ comfy_dir }}/venv/bin/python {{ comfy_dir }}/comfyui-git/main.py \
+        --listen 0.0.0.0 \
+        --port 8188 \
+        --input-directory {{ comfy_dir }}/input \
+        --output-directory {{ comfy_dir }}/output \
+        --user-directory {{ comfy_dir }}/user
+      Restart=on-failure
+      RestartSec=5
+
+      [Install]
+      WantedBy=default.target
+  notify:
+    - Reload user systemd
+    - Restart ComfyUI
+
+
+- name: Enable lingering for current user
+  become: true
+  ansible.builtin.command:
+    cmd: "loginctl enable-linger {{ ansible_user }}"
+    creates: "/var/lib/systemd/linger/{{ ansible_user }}"
+
+- name: Enable and start ComfyUI service
+  ansible.builtin.systemd_service:
+    name: comfyui.service
+    scope: user
+    enabled: true
+    state: started

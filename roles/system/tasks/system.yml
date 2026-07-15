@@ -1,0 +1,118 @@
+# - name: Update APT cache and upgrade packages
+#   become: true
+#   ansible.builtin.apt:
+#     update_cache: true
+#     cache_valid_time: 3600
+#     upgrade: dist
+
+# - name: Remove obsolete packages
+#   become: true
+#   ansible.builtin.apt:
+#     autoremove: true
+#     purge: true
+
+# - name: Check whether a reboot is required
+#   ansible.builtin.stat:
+#     path: /var/run/reboot-required
+#   register: system_reboot_required_file
+
+# - name: Reboot when required
+#   become: true
+#   ansible.builtin.reboot:
+#     msg: "Rebooting after package updates"
+#     reboot_timeout: 600
+#   when: system_reboot_required_file.stat.exists
+
+# - name: Install common host packages
+#   become: true
+#   ansible.builtin.apt:
+#     name:
+#       - ca-certificates
+#       - curl
+#       - git
+#       - python3
+#       - python3-venv
+#       - python3-pip
+#       - ffmpeg
+#       - libgl1
+#       - libglib2.0-0
+#     state: present
+#     update_cache: true
+#     cache_valid_time: 3600
+
+- name: Upgrade installed packages
+  become: true
+  ansible.builtin.dnf:
+    name: "*"
+    state: latest
+    update_only: true
+    update_cache: true
+
+- name: Remove unused dependencies
+  become: true
+  ansible.builtin.dnf:
+    autoremove: true
+
+- name: Install reboot detection plugin
+  become: true
+  ansible.builtin.dnf:
+    name: dnf5-plugins
+    state: present
+
+- name: Check whether a reboot is required
+  become: true
+  ansible.builtin.command:
+    cmd: dnf5 needs-restarting
+  register: system_reboot_check
+  changed_when: false
+  failed_when: system_reboot_check.rc not in [0, 1]
+
+- name: Reboot when required
+  become: true
+  ansible.builtin.reboot:
+    msg: "Rebooting after package updates"
+    reboot_timeout: 600
+  when: system_reboot_check.rc == 1
+
+- name: Install common host packages
+  become: true
+  ansible.builtin.dnf:
+    name:
+      - ca-certificates
+      - curl
+      - git
+      - python3
+      - mesa-libGL
+      - glib2
+    state: present
+
+- name: Enable RPM Fusion free repository
+  become: true
+  ansible.builtin.dnf:
+    name: >-
+      https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-{{
+      ansible_facts.distribution_major_version }}.noarch.rpm
+    state: present
+    disable_gpg_check: true
+
+- name: Install full FFmpeg
+  become: true
+  ansible.builtin.dnf:
+    name: ffmpeg
+    state: present
+
+
+- name: Add current user to GPU groups
+  become: true
+  ansible.builtin.user:
+    name: "{{ ansible_user }}"
+    groups:
+      - render
+      - video
+    append: true
+
+# TODO : comfyui
+# ... (need to add a Unload All Models node at the end of image generation wokflows https://forum.comfy.org/t/automatically-unload-models-from-vram/1511)
+
+- name: Install comfyui
+  ansible.builtin.import_tasks: comfyui.yml

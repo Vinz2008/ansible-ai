@@ -1,0 +1,82 @@
+services:
+# TODO : replace ollama with llama.cpp/llama-server (with llama-swap ?) to improve performance
+  ollama:
+    image: ollama/ollama:rocm
+    container_name: ollama
+    ports:
+      - 11434:11434
+    volumes:
+      - "{{ home_folder }}/ollama:/root/.ollama:Z"
+    devices:
+      - "/dev/kfd:/dev/kfd"
+      - "/dev/dri:/dev/dri"
+    restart: unless-stopped
+
+
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: open-webui
+    ports:
+      - "3000:8080"
+    environment:
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - WEBUI_AUTH=True
+      - "WEBUI_SECRET_KEY={{ openwebui_secret_key }}"
+      - "OPENAI_API_KEY={{ openai_api_key }}"
+      - ENABLE_SIGNUP=False
+      - ENABLE_AUTOCOMPLETE_GENERATION=False
+      - ENABLE_WEB_SEARCH=True
+      - WEB_SEARCH_ENGINE="searxng"
+      - WEB_SEARCH_RESULT_COUNT=3 # TODO : change this ?
+      - WEB_SEARCH_CONCURRENT_REQUESTS=10 # TODO : change this ?
+      - SEARXNG_QUERY_URL="http://searxng:3001/search?q=<query>"
+# TODO : set WEBUI_URL after adding a https dns url
+    volumes: 
+    - "{{ home_folder }}/open-webui:/app/backend/data:Z"
+    depends_on:
+      - ollama
+      - searxng
+    restart: unless-stopped
+# TODO : in the openwebui interface, set a task model to a small model (it is used for titles and tags of conversations) for ex qwen2.5:0.5B
+
+# TODO : add searxng config in ansible ?
+
+  searxng:
+    container_name: searxng
+    image: searxng/searxng:latest
+    ports:
+      - 3001:8080
+    volumes:
+      - "{{ home_folder }}/searxng/config:/etc/searxng:rw,Z"
+      - "{{ home_folder }}/searxng/data:/var/cache/searxng:Z"
+    environment:
+      - SEARXNG_BASE_URL=http://localhost:8080/
+      - "SEARXNG_SECRET={{ searxng_secret_key }}"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
+    restart: unless-stopped
+
+# TODO : use Speaches for speech transcription and TTS
+
+# TODO : do I really need this because of Copilot in fedora server
+  # kula:
+  #   image: c0m4r/kula:latest
+  #   container_name: kula
+  #   pid: "host"
+  #   network_mode: "host" # webui is on port 27960
+  #   volumes:
+  #     - /proc:/proc:ro,z
+  #     - "{{ home_folder }}/kula/data:/app/data":Z
+  #   restart: unless-stopped
+
+
+  # watchtower:
+  #   image: nickfedor/watchtower:latest
+  #   container_name: watchtower
+  #   restart: unless-stopped
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #   command: --cleanup --schedule "0 0 4 * * *"

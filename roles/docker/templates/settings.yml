@@ -1,0 +1,32 @@
+use_default_settings:
+  engines:
+    keep_only:
+# TODO : they are not ordered, so add engines weights if some engine dominates too much or is better than the other
+      # general
+      - google
+      - brave
+      - duckduckgo
+      - bing
+      # knowledge
+      - wikipedia
+      - wikidata
+      # community 
+      - reddit
+      # programming
+      - github
+      - crates.io
+      - stackoverflow
+      # academic
+      - google scholar
+      - openalex # if becomes slow, remove this
+      - crossref # if becomes slow, remove this
+
+
+server:
+  safe_search: 0
+  limiter: false
+
+search:
+  formats:
+    - html
+    - json

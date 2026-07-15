@@ -1,0 +1,120 @@
+# - name: Install Docker repository prerequisites
+#   ansible.builtin.apt:
+#     name:
+#       - ca-certificates
+#       - python3-debian
+#     state: present
+#     update_cache: true
+#     cache_valid_time: 3600
+
+# - name: Configure Docker APT repository
+#   ansible.builtin.deb822_repository:
+#     name: docker
+#     types:
+#       - deb
+#     uris:
+#       - https://download.docker.com/linux/ubuntu
+#     suites:
+#       - "{{ ansible_facts.distribution_release }}"
+#     components:
+#       - stable
+#     architectures:
+#       - amd64
+#     signed_by: https://download.docker.com/linux/ubuntu/gpg
+#     state: present
+#     enabled: true
+#   register: docker_repository
+
+
+# - name: Refresh APT cache after adding Docker repository
+#   ansible.builtin.apt:
+#     update_cache: true
+#   when: docker_repository.changed
+#   tags:
+#     - skip_ansible_lint
+
+# - name: Install Docker Engine and Compose
+#   ansible.builtin.apt:
+#     name: |
+#       - docker-ce
+#       - docker-ce-cli
+#       - containerd.io
+#       - docker-buildx-plugin
+#       - docker-compose-plugin
+#     state: present
+
+- name: Install Docker repository prerequisites
+  become: true
+  ansible.builtin.dnf:
+    name:
+      - dnf-plugins-core
+    state: present
+
+
+- name: Install official Docker repository
+  become: true
+  ansible.builtin.get_url:
+    url: https://download.docker.com/linux/fedora/docker-ce.repo
+    dest: /etc/yum.repos.d/docker-ce.repo
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Install Docker Engine and Compose
+  become: true
+  ansible.builtin.dnf:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-buildx-plugin
+      - docker-compose-plugin
+    state: present
+    update_cache: true
+
+- name: Ensure Docker service is enabled and running
+  ansible.builtin.systemd_service:
+    name: docker.service
+    enabled: true
+    state: started
+
+- name: Add selected users to Docker group
+  ansible.builtin.user:
+    name: "{{ ansible_user }}"
+    groups:
+      - docker
+    append: true
+
+- name: Create SearXNG directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: "0755"
+  loop:
+    - "{{ home_folder }}/searxng/config"
+    - "{{ home_folder }}/searxng/data"
+
+
+- name: Install SearXNG configuration
+  ansible.builtin.template:
+    src: settings.yml
+    dest: "{{ home_folder }}/searxng/config/settings.yml"
+    mode: "0644"
+  notify: Restart SearXNG
+
+- name: Create compose directory
+  ansible.builtin.file:
+    path: "{{ docker_compose_dir }}"
+    state: directory
+    mode: "0755"
+
+- name: Copy compose file
+  ansible.builtin.template:
+    src: compose.yaml
+    dest: "{{ docker_compose_dir }}/docker-compose.yml"
+    mode: "0644"
+
+- name: Docker-compose up
+  community.docker.docker_compose_v2:
+    build: "always"
+    project_src: "{{ docker_compose_dir }}"
