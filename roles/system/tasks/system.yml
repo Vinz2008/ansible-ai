@@ -42,6 +42,7 @@
       - python3
       - mesa-libGL
       - glib2
+      - radeontop
     state: present
 
 - name: Enable RPM Fusion free repository

@@ -5,6 +5,10 @@
       - role: system
         tags:
             - system
+      # TODO : enable this
+      # - role: llama-cpp
+      #   tags:
+      #       - llama-cpp
       - role: docker
         tags:
             - containers

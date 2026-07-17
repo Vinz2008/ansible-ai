@@ -1,3 +1,5 @@
+# TODO : remove this after removing ollama
+
 - name: Wait for Ollama API
   ansible.builtin.uri:
     url: "http://127.0.0.1:11434/api/tags"

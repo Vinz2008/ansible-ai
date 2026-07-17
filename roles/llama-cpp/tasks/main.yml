@@ -1,0 +1,8 @@
+- name: Install llama-cpp
+  ansible.builtin.import_tasks: install.yml
+
+- name: Download models
+  ansible.builtin.import_tasks: download.yml
+
+- name: Configure llama-cpp
+  ansible.builtin.import_tasks: config.yml
