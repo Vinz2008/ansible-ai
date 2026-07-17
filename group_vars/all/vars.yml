@@ -13,9 +13,18 @@ ollama_models:
 # TODO : uncensored model
 
 # this would be used with llama-cpp
+# TODO : move this in vars in the llama-cpp role ?
 huggingface_models:
   - name: llama3.3-70b
     repository: bartowski/Llama-3.3-70B-Instruct-GGUF
     revision: main
     files:
       - Llama-3.3-70B-Instruct-Q4_K_M.gguf
+  - name: qwen3.6-35b
+    repository: bartowski/Qwen_Qwen3.6-35B-A3B-GGUF
+    # Prefer a pinned commit SHA later.
+    revision: main
+    files:
+      - Qwen_Qwen3.6-35B-A3B-Q4_K_M.gguf
+      - mmproj-Qwen_Qwen3.6-35B-A3B-f16.gguf
+

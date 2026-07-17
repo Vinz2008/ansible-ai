@@ -1,7 +1,30 @@
 models:
   llama3.3-70b:
+    name: "Llama 3.3 70B Instruct"
     cmd: >-
       /usr/local/bin/llama-server
-      --port ${PORT}
       --model {{ home_folder }}/llama-cpp-models/llama3.3-70b/Llama-3.3-70B-Instruct-Q4_K_M.gguf
+      --host 127.0.0.1
+      --port ${PORT}
+      --ctx-size 8192
+      --parallel 1
       --n-gpu-layers 999
+      --flash-attn on
+      --cache-type-k q8_0
+      --cache-type-v q8_0
+    ttl: 60
+  qwen3.6-35b:
+    name: "Qwen 3.6 35B A3B Vision"
+    cmd: >-
+      /usr/local/bin/llama-server
+      --model {{ home_folder }}/llama-cpp-models/qwen3.6-35b/Qwen_Qwen3.6-35B-A3B-Q4_K_M.gguf
+      --mmproj {{ home_folder }}/llama-cpp-models/qwen3.6-35b/mmproj-Qwen_Qwen3.6-35B-A3B-f16.gguf
+      --host 127.0.0.1
+      --port ${PORT}
+      --ctx-size 32768
+      --parallel 1
+      --n-gpu-layers 999
+      --flash-attn on
+      --cache-type-k q8_0
+      --cache-type-v q8_0
+    ttl: 120
