@@ -11,7 +11,7 @@ Uses fedora server
 fast utility model: Qwen3.5 2B
 - huge model : Llama 3.3 70B Instruct - Q4_K_M or qwen2.5:72b-instruct or Qwen3.5-122B-A10B (Q3)
 
-- uncensored big model : Qwen3.6-27B Abliterated or (more uncensored) Dolphin 3.0 Mistral 24B or Dolphin 3.0 R1 Mistral 24B if reasonning needed
+- uncensored big model : Qwen3.6-27B Abliterated or (more uncensored) Dolphin 3.0 Mistral 24B or Dolphin 3.0 R1 Mistral 24B if reasoning needed or Satyr-V0.1-4B
 
 ## TODO
 
