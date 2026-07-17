@@ -1,1 +1,47 @@
-# TODO
+- name: Create Hugging Face CLI virtual environment
+  ansible.builtin.command:
+    argv:
+      - python3
+      - -m
+      - venv
+      - "{{ home_folder }}/huggingface"
+  args:
+    creates: "{{ home_folder }}/huggingface/bin/python"
+
+- name: Install Hugging Face Hub CLI
+  ansible.builtin.pip:
+    name: huggingface-hub
+    virtualenv: "{{ home_folder }}/huggingface"
+    state: present
+
+- name: Create model directory
+  ansible.builtin.file:
+    path: "{{ home_folder }}/llama-cpp-models"
+    state: directory
+    mode: "0755"
+
+- name: Create model subdirectories
+  ansible.builtin.file:
+    path: "{{ home_folder }}/llama-cpp-models/{{ item.name }}"
+    state: directory
+    mode: "0755"
+  loop: "{{ huggingface_models }}"
+  loop_control:
+    label: "{{ item.name }}"
+
+- name: Download Hugging Face model files
+  ansible.builtin.command:
+    argv:
+      - "{{ home_folder }}/{{ huggingface }}/bin/hf"
+      - download
+      - "{{ item.0.repository }}"
+      - "{{ item.1 }}"
+      - --revision
+      - "{{ item.0.revision }}"
+      - --local-dir
+      - "{{ home_folder }}/llama-cpp-models/{{ item.0.name }}"
+  args:
+    creates: "{{ home_folder }}/llama-cpp-models/{{ item.0.name }}/{{ item.1 }}"
+  loop: "{{ huggingface_models | subelements('files') }}"
+  loop_control:
+    label: "{{ item.0.name }}/{{ item.1 }}"

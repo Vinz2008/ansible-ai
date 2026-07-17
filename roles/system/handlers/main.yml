@@ -1,8 +1,4 @@
 ---
-- name: Reload user systemd
-  ansible.builtin.systemd_service:
-    scope: user
-    daemon_reload: true
 - name: Restart ComfyUI
   ansible.builtin.systemd_service:
     name: comfyui.service

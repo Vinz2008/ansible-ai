@@ -1,17 +1,20 @@
 ---
 - name: Playbook
   hosts: gmktec
+  handlers:
+    - name: Load shared handlers
+      ansible.builtin.import_tasks: handlers/main.yml
   roles:
-      - role: system
-        tags:
-            - system
+    - role: system
+      tags:
+        - system
       # TODO : enable this
       # - role: llama-cpp
       #   tags:
       #       - llama-cpp
-      - role: docker
-        tags:
-            - containers
-      - role: models
-        tags:
-            - models
+    - role: docker
+      tags:
+        - containers
+    - role: models
+      tags:
+        - models

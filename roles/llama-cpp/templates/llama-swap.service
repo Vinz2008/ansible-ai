@@ -1,0 +1,17 @@
+[Unit]
+Description=llama-swap
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User={{ ansible_user }}
+Group={{ ansible_user }}
+ExecStart=/usr/local/bin/llama-swap \
+  --config /etc/llama-swap/config.yaml \
+  --listen 0.0.0.0:9292
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

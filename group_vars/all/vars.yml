@@ -11,3 +11,11 @@ ollama_models:
   - qwen3.5:2b
   - qwen2.5:0.5b
 # TODO : uncensored model
+
+# this would be used with llama-cpp
+huggingface_models:
+  - name: llama3.3-70b
+    repository: bartowski/Llama-3.3-70B-Instruct-GGUF
+    revision: main
+    files:
+      - Llama-3.3-70B-Instruct-Q4_K_M.gguf
