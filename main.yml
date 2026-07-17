@@ -8,13 +8,12 @@
     - role: system
       tags:
         - system
-      # TODO : enable this
-      # - role: llama-cpp
-      #   tags:
-      #       - llama-cpp
+    - role: llama-cpp
+      tags:
+        - llama-cpp
     - role: docker
       tags:
         - containers
-    - role: models
-      tags:
-        - models
+    # - role: models
+    #   tags:
+    #     - models

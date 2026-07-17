@@ -18,7 +18,7 @@ models:
       --cache-type-k q8_0
       --cache-type-v q8_0
       --jinja
-    ttl: 60
+    ttl: 30
   qwen3.6-35b:
     name: "Qwen 3.6 35B A3B Vision"
     cmd: >-
@@ -34,7 +34,7 @@ models:
       --cache-type-k q8_0
       --cache-type-v q8_0
       --jinja
-    ttl: 120
+    ttl: 60
 
   gemma4-12b:
     name: "Gemma 4 12B Vision"
@@ -51,7 +51,7 @@ models:
       --cache-type-k q8_0
       --cache-type-v q8_0
       --jinja
-    ttl: 120
+    ttl: 180
 
   qwen3.5-9b:
     name: "Qwen 3.5 9B Vision"
@@ -68,7 +68,7 @@ models:
       --cache-type-k q8_0
       --cache-type-v q8_0
       --jinja
-    ttl: 180
+    ttl: 300
 
   qwen3.5-2b:
     name: "Qwen 3.5 2B Utility"

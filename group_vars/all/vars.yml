@@ -1,16 +1,16 @@
 home_folder: "{{ ansible_user_dir }}"
 comfy_dir: "{{ home_folder }}/ComfyUI"
-ollama_models:
-  - llama3.3:70b
-  - qwen3.6:35b
-# TODO : maybe Qwen3.6 27B ?
-# TODO : maybe a mistral model ?
-# gpt-oss ?
-  - gemma4:12b
-  - hf.co/bartowski/Qwen_Qwen3.5-9B-GGUF:Q6_K_L
-  - qwen3.5:2b
-  - qwen2.5:0.5b
-# TODO : uncensored model
+# ollama_models:
+#   - llama3.3:70b
+#   - qwen3.6:35b
+# # TODO : maybe Qwen3.6 27B ?
+# # TODO : maybe a mistral model ?
+# # gpt-oss ?
+#   - gemma4:12b
+#   - hf.co/bartowski/Qwen_Qwen3.5-9B-GGUF:Q6_K_L
+#   - qwen3.5:2b
+#   - qwen2.5:0.5b
+# # TODO : uncensored model
 
 # this would be used with llama-cpp
 # TODO : move this in vars in the llama-cpp role ?

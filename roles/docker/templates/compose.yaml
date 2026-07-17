@@ -1,16 +1,16 @@
 services:
 # TODO : replace ollama with llama.cpp/llama-server (with llama-swap ?) to improve performance
-  ollama:
-    image: ollama/ollama:rocm
-    container_name: ollama
-    ports:
-      - 11434:11434
-    volumes:
-      - "{{ home_folder }}/ollama:/root/.ollama:Z"
-    devices:
-      - "/dev/kfd:/dev/kfd"
-      - "/dev/dri:/dev/dri"
-    restart: unless-stopped
+  # ollama:
+  #   image: ollama/ollama:rocm
+  #   container_name: ollama
+  #   ports:
+  #     - 11434:11434
+  #   volumes:
+  #     - "{{ home_folder }}/ollama:/root/.ollama:Z"
+  #   devices:
+  #     - "/dev/kfd:/dev/kfd"
+  #     - "/dev/dri:/dev/dri"
+  #   restart: unless-stopped
 
 
   open-webui:
@@ -19,22 +19,26 @@ services:
     ports:
       - "3000:8080"
     environment:
-      - OLLAMA_BASE_URL=http://ollama:11434
+      - ENABLE_OLLAMA_API=False
+      - ENABLE_OPENAI_API="true"
+      - OPENAI_API_BASE_URLS=http://host.docker.internal:9292/v1;https://api.openai.com/v1
+      - "OPENAI_API_KEYS=llama-swap;{{ openai_api_key }}"
+      - OPENAI_API_CONFIGS={"0":{"enable":true,"prefix_id":"local"},"1":{"enable":true,"prefix_id":"openai"}}
       - WEBUI_AUTH=True
       - "WEBUI_SECRET_KEY={{ openwebui_secret_key }}"
-      - "OPENAI_API_KEY={{ openai_api_key }}"
       - ENABLE_SIGNUP=False
       - ENABLE_AUTOCOMPLETE_GENERATION=False
       - ENABLE_WEB_SEARCH=True
       - WEB_SEARCH_ENGINE="searxng"
-      - WEB_SEARCH_RESULT_COUNT=3 # TODO : change this ?
-      - WEB_SEARCH_CONCURRENT_REQUESTS=10 # TODO : change this ?
-      - SEARXNG_QUERY_URL="http://searxng:3001/search?q=<query>"
+      - WEB_SEARCH_RESULT_COUNT=5
+      - WEB_SEARCH_CONCURRENT_REQUESTS=5
+      - SEARXNG_QUERY_URL="http://searxng:8080/search?q=<query>&format=json"
 # TODO : set WEBUI_URL after adding a https dns url
     volumes: 
     - "{{ home_folder }}/open-webui:/app/backend/data:Z"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     depends_on:
-      - ollama
       - searxng
     restart: unless-stopped
 # TODO : in the openwebui interface, set a task model to a small model (it is used for titles and tags of conversations) for ex qwen2.5:0.5B

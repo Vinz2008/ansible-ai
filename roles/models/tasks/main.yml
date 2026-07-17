@@ -1,39 +1,39 @@
 # TODO : remove this after removing ollama
 
-- name: Wait for Ollama API
-  ansible.builtin.uri:
-    url: "http://127.0.0.1:11434/api/tags"
-    method: GET
-    status_code: 200
-  register: models_ollama_tags
-  retries: 30
-  delay: 2
-  until: models_ollama_tags.status == 200
-  changed_when: false
+# - name: Wait for Ollama API
+#   ansible.builtin.uri:
+#     url: "http://127.0.0.1:11434/api/tags"
+#     method: GET
+#     status_code: 200
+#   register: models_ollama_tags
+#   retries: 30
+#   delay: 2
+#   until: models_ollama_tags.status == 200
+#   changed_when: false
 
-- name: Get installed Ollama model names
-  ansible.builtin.set_fact:
-    models_ollama_installed_models: >-
-      {{
-        models_ollama_tags.json.models
-        | map(attribute='name')
-        | list
-      }}
+# - name: Get installed Ollama model names
+#   ansible.builtin.set_fact:
+#     models_ollama_installed_models: >-
+#       {{
+#         models_ollama_tags.json.models
+#         | map(attribute='name')
+#         | list
+#       }}
 
-- name: Pull missing Ollama models
-  ansible.builtin.uri:
-    url: "http://127.0.0.1:11434/api/pull"
-    method: POST
-    body_format: json
-    body:
-      model: "{{ item }}"
-      stream: false
-    status_code: 200
-    return_content: true
-    timeout: 7200
-  loop: "{{ ollama_models }}"
-  when:
-    - item not in models_ollama_installed_models
-    - (item ~ ':latest') not in models_ollama_installed_models
-  loop_control:
-    label: "{{ item }}"
+# - name: Pull missing Ollama models
+#   ansible.builtin.uri:
+#     url: "http://127.0.0.1:11434/api/pull"
+#     method: POST
+#     body_format: json
+#     body:
+#       model: "{{ item }}"
+#       stream: false
+#     status_code: 200
+#     return_content: true
+#     timeout: 7200
+#   loop: "{{ ollama_models }}"
+#   when:
+#     - item not in models_ollama_installed_models
+#     - (item ~ ':latest') not in models_ollama_installed_models
+#   loop_control:
+#     label: "{{ item }}"
