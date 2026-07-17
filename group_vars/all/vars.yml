@@ -38,3 +38,15 @@ huggingface_models:
     files:
       - gemma-4-12B-it-Q6_K.gguf
       - mmproj-gemma-4-12B-it-f16.gguf
+  - name: qwen3.5-9b
+    repository: bartowski/Qwen_Qwen3.5-9B-GGUF
+    revision: main
+    files:
+      - Qwen3.5-9B-Q6_K_L.gguf
+      - mmproj-Qwen_Qwen3.5-9B-bf16.gguf
+
+  - name: qwen3.5-2b
+    repository: bartowski/Qwen_Qwen3.5-2B-GGUF
+    revision: main
+    files:
+      - Qwen3.5-2B-Q8_0.gguf
