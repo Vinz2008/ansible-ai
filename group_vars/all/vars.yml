@@ -27,4 +27,14 @@ huggingface_models:
     files:
       - Qwen_Qwen3.6-35B-A3B-Q4_K_M.gguf
       - mmproj-Qwen_Qwen3.6-35B-A3B-f16.gguf
-
+  - name: qwen2.5-0.5b
+    repository: bartowski/Llama-3.3-70B-Instruct-GGUF
+    revision: main
+    files:
+      - Llama-3.3-70B-Instruct-Q4_K_M.gguf
+  - name: gemma4-12b
+    repository: bartowski/gemma-4-12B-it-GGUF
+    revision: main
+    files:
+      - gemma-4-12B-it-Q6_K.gguf
+      - mmproj-gemma-4-12B-it-f16.gguf
