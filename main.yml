@@ -14,10 +14,6 @@
     - role: comfyui
       tags:
         - comfyui
-    # TODO : enable this
-    # - role: ace
-    #   tags:
-    #     - ace
     - role: docker
       tags:
         - containers
