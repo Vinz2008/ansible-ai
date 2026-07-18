@@ -149,3 +149,5 @@
 # - one for best quality (high res, 32B) : FLUX.2 Dev
 # - one for image editing : Qwen-Image-Edit-2511
 # - one uncensored RealVisXL V5.0 or Juggernaut XL Ragnarok
+
+# TODO: also ace step 1.5
