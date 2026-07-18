@@ -13,6 +13,5 @@ fast utility model: Qwen3.5 2B
 
 - uncensored big model : Qwen3.6-27B Abliterated or (more uncensored) Dolphin 3.0 Mistral 24B or Dolphin 3.0 R1 Mistral 24B if reasoning needed or Satyr-V0.1-4B
 
-## TODO
-
-change ttm.page_pool_size (and ttm.pages_limit ?) in /etc/modprobe.d/increase_amd_memory.conf
+# TODO
+when installing, create a 16GB swap (or maybe 32GB ?)

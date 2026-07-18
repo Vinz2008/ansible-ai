@@ -1,5 +1,4 @@
 services:
-# TODO : replace ollama with llama.cpp/llama-server (with llama-swap ?) to improve performance
   # ollama:
   #   image: ollama/ollama:rocm
   #   container_name: ollama
@@ -33,6 +32,10 @@ services:
       - WEB_SEARCH_RESULT_COUNT=5
       - WEB_SEARCH_CONCURRENT_REQUESTS=5
       - SEARXNG_QUERY_URL="http://searxng:8080/search?q=<query>&format=json"
+      # - AUDIO_STT_ENGINE="openai"
+      # - AUDIO_STT_OPENAI_API_BASE_URL="http://speaches:8000/v1"
+      # - AUDIO_STT_OPENAI_API_KEY="does-not-matter-what-you-put-but-should-not-be-empty"
+      # - AUDIO_STT_MODEL="TODO"
 # TODO : set WEBUI_URL after adding a https dns url
     volumes: 
     - "{{ home_folder }}/open-webui:/app/backend/data:Z"
@@ -40,10 +43,9 @@ services:
       - "host.docker.internal:host-gateway"
     depends_on:
       - searxng
+#      - speaches
     restart: unless-stopped
 # TODO : in the openwebui interface, set a task model to a small model (it is used for titles and tags of conversations) for ex qwen2.5:0.5B
-
-# TODO : add searxng config in ansible ?
 
   searxng:
     container_name: searxng
@@ -64,6 +66,19 @@ services:
     restart: unless-stopped
 
 # TODO : use Speaches for speech transcription and TTS
+# TODO : test a bigger model like fish audio for TTS (in this case set STT_MODEL_TTL to 0)
+  # speaches:
+  #   container_name: speaches
+  #   image: ghcr.io/speaches-ai/speaches:latest-cpu
+  #   ports:
+  #     - 8000:8000
+  #   volumes:
+  #     - "{{ home_folder }}/speaches/hf-hub-cache:/home/ubuntu/.cache/huggingface/hub:Z"
+  #   environment:
+  #     - STT_MODEL_TTL=120
+  #     - TTS_MODEL_TTL=-1
+  #     - VAD_MODEL_TTL=-1
+  #   restart: unless-stopped
 
 # TODO : do I really need this because of Copilot in fedora server
   # kula:
