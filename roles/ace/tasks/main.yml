@@ -1,0 +1,74 @@
+# TODO : maybe in the future install ace-step ui
+
+- name: Create ACE-Step-1.5 data directories
+  ansible.builtin.file:
+    path: "{{ home_folder }}/ace"
+    state: directory
+    mode: "0755"
+
+
+- name: Clone ACE-Step-1.5
+  ansible.builtin.git:
+    repo: https://github.com/ace-step/ACE-Step-1.5/
+    dest: "{{ home_folder }}/ace/ACE-Step-1.5"
+    version: master
+    update: true
+
+- name: Create venv
+  ansible.builtin.command:
+    cmd: "python3 -m venv {{ home_folder }}/ace/venv"
+    creates: "{{ home_folder }}/ace/venv/bin/python"
+
+- name: Install ROCm PyTorch for Strix Halo
+  ansible.builtin.pip:
+    name:
+      - torch
+    virtualenv: "{{ home_folder }}/ace/venv"
+    extra_args: "--pre --index-url https://rocm.nightlies.amd.com/v2/gfx1151/"
+  notify: Restart Ace
+
+- name: Install ACE-Step-1.5
+  ansible.builtin.pip:
+    name: "{{ home_folder }}/ace/ACE-Step-1.5"
+    virtualenv: "{{ home_folder }}/ace/venv"
+    editable: true
+  notify: Restart Ace
+
+
+- name: Create user systemd configuration directory
+  ansible.builtin.file:
+    path: "{{ ansible_user_dir }}/.config/systemd/user"
+    state: directory
+    mode: "0755"
+
+- name: Install ACE-Step-1.5 user service
+  ansible.builtin.copy:
+    dest: "{{ ansible_user_dir }}/.config/systemd/user/ace.service"
+    mode: "0644"
+    content: |
+      [Unit]
+      Description=ACE-Step-1.5
+      After=network-online.target
+      Wants=network-online.target
+
+      [Service]
+      WorkingDirectory={{ home_folder }}/ace/ACE-Step-1.5
+      ExecStart={{ home_folder }}/ace/ACE-Step-1.5/venv/bin/python \
+        -m acestep.acestep_v15_pipeline \
+        --server-name 0.0.0.0 \
+        --port 7680
+      Restart=on-failure
+      RestartSec=5
+
+      [Install]
+      WantedBy=default.target
+  notify:
+    - Reload user systemd
+    - Restart Ace
+
+- name: Enable and start ACE-Step-1.5 service
+  ansible.builtin.systemd_service:
+    name: ace.service
+    scope: user
+    enabled: true
+    state: started

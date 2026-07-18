@@ -90,6 +90,3 @@
     content: |
       options ttm pages_limit=14680064
   notify: Reboot system
-
-- name: Install comfyui
-  ansible.builtin.import_tasks: comfyui.yml
