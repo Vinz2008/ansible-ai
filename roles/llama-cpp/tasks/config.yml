@@ -14,10 +14,21 @@
     src: config.yaml
     mode: "0644"
 
+- name: Configure llama.cpp shared library path
+  become: true
+  ansible.builtin.copy:
+    dest: /etc/ld.so.conf.d/llama-cpp.conf
+    owner: root
+    group: root
+    mode: "0644"
+    content: |
+      /usr/local/lib64
+  notify: Refresh shared library cache
+
 - name: Install llama-swap user service
   become: true
   ansible.builtin.template:
-    dest: "{{ ansible_user_dir }}/.config/systemd/user/llama-swap.service"
+    dest: "/etc/systemd/system/llama-swap.service"
     src: llama-swap.service
     owner: root
     group: root

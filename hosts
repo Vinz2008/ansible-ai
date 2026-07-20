@@ -1,2 +1,2 @@
-[gmktec]
-gmktec ansible_host=TODO ansible_user=vincent ansible_connection=ssh
+[strix_halo]
+gmktec ansible_host=192.168.1.33 ansible_user=vincent ansible_connection=ssh

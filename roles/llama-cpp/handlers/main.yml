@@ -4,3 +4,9 @@
   ansible.builtin.systemd_service:
     name: llama-swap.service
     state: restarted
+
+- name: Refresh shared library cache
+  become: true
+  ansible.builtin.command:
+    cmd: /usr/sbin/ldconfig
+  changed_when: true

@@ -19,10 +19,10 @@ services:
       - "3000:8080"
     environment:
       - ENABLE_OLLAMA_API=False
-      - ENABLE_OPENAI_API="true"
+      - ENABLE_OPENAI_API=True
       - OPENAI_API_BASE_URLS=http://host.docker.internal:9292/v1;https://api.openai.com/v1
       - "OPENAI_API_KEYS=llama-swap;{{ openai_api_key }}"
-      - OPENAI_API_CONFIGS={"0":{"enable":true,"prefix_id":"local"},"1":{"enable":true,"prefix_id":"openai"}}
+      - 'OPENAI_API_CONFIGS={"0":{"enable":true,"prefix_id":"local"},"1":{"enable":true,"prefix_id":"openai"}}'
       - WEBUI_AUTH=True
       - "WEBUI_SECRET_KEY={{ openwebui_secret_key }}"
       - ENABLE_SIGNUP=False
@@ -31,7 +31,7 @@ services:
       - WEB_SEARCH_ENGINE="searxng"
       - WEB_SEARCH_RESULT_COUNT=5
       - WEB_SEARCH_CONCURRENT_REQUESTS=5
-      - SEARXNG_QUERY_URL="http://searxng:8080/search?q=<query>&format=json"
+      - SEARXNG_QUERY_URL=http://searxng:8080/search?q=<query>&format=json
       # - AUDIO_STT_ENGINE="openai"
       # - AUDIO_STT_OPENAI_API_BASE_URL="http://speaches:8000/v1"
       # - AUDIO_STT_OPENAI_API_KEY="does-not-matter-what-you-put-but-should-not-be-empty"

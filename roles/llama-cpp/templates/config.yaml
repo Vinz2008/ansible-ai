@@ -1,6 +1,7 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/mostlygeek/llama-swap/refs/heads/main/config-schema.json
 
 globalTTL: 120
+healthCheckTimeout: 600
 
 models:
 # if RAM is complicated on the 70B model, switch the cache type to q4_0
@@ -18,7 +19,7 @@ models:
       --cache-type-k q8_0
       --cache-type-v q8_0
       --jinja
-    ttl: 30
+    ttl: 900
   qwen3.6-35b:
     name: "Qwen 3.6 35B A3B Vision"
     cmd: >-
@@ -51,13 +52,14 @@ models:
       --cache-type-k q8_0
       --cache-type-v q8_0
       --jinja
+      --ctx-checkpoints 1
     ttl: 180
 
   qwen3.5-9b:
     name: "Qwen 3.5 9B Vision"
     cmd: >-
       /usr/local/bin/llama-server
-      --model {{ home_folder }}/llama-cpp-models/qwen3.5-9b/Qwen3.5-9B-Q6_K_L.gguf
+      --model {{ home_folder }}/llama-cpp-models/qwen3.5-9b/Qwen_Qwen3.5-9B-Q6_K_L.gguf
       --mmproj {{ home_folder }}/llama-cpp-models/qwen3.5-9b/mmproj-Qwen_Qwen3.5-9B-bf16.gguf
       --host 127.0.0.1
       --port ${PORT}
@@ -74,7 +76,7 @@ models:
     name: "Qwen 3.5 2B Utility"
     cmd: >-
       /usr/local/bin/llama-server
-      --model {{ home_folder }}/llama-cpp-models/qwen3.5-2b/Qwen3.5-2B-Q8_0.gguf
+      --model {{ home_folder }}/llama-cpp-models/qwen3.5-2b/Qwen_Qwen3.5-2B-Q8_0.gguf
       --host 127.0.0.1
       --port ${PORT}
       --ctx-size 32768
@@ -91,13 +93,15 @@ models:
   qwen-title:
     cmd: >-
       /usr/local/bin/llama-server
-      --model {{ home_folder }}/llama-cpp-models/qwen2.5-0.5b/Qwen2.5-0.5B-Instruct-Q4_K_M.gguf
+      --model /home/vincent/llama-cpp-models/titan-qwen2.5-0.5b/TiTan-Qwen2.5-0.5B-q4_k_m.gguf
       --host 127.0.0.1
       --port ${PORT}
       --ctx-size 4096
       --parallel 2
+      --threads 4
       --n-gpu-layers 0
       --jinja
+    ttl: 0
 
 
 hooks:

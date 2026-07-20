@@ -18,8 +18,10 @@
   ansible.builtin.command:
     argv:
       - cmake
-      - -S {{ home_folder }}/llama-cpp
-      - -B {{ home_folder }}/llama-cpp/build
+      - -S
+      - "{{ home_folder }}/llama-cpp"
+      - -B
+      - "{{ home_folder }}/llama-cpp/build"
       - -DGGML_HIP=ON
       - -DAMDGPU_TARGETS=gfx1151
       - -DLLAMA_HIP_UMA=ON
@@ -68,6 +70,7 @@
     dest: "{{ home_folder }}/llama-swap"
     version: v240
     update: true
+    force: true
   register: system_llama_swap_repository
 
 - name: Check whether llama-swap exists in the build dir
@@ -78,6 +81,7 @@
 - name: Build llama-swap
   ansible.builtin.command:
     cmd: make clean linux-amd64
+    chdir: "{{ home_folder }}/llama-swap"
   when:
     - system_llama_swap_repository.changed or not system_llama_swap_binary.stat.exists
   changed_when: true
@@ -91,6 +95,7 @@
   become: true
   ansible.builtin.copy:
     dest: /usr/local/bin/llama-swap
+    remote_src: true
     src: "{{ home_folder }}/llama-swap/build/llama-swap-linux-amd64"
     mode: "0755"
   when: system_llama_swap_repository.changed or not system_llama_swap_installed_binary.stat.exists

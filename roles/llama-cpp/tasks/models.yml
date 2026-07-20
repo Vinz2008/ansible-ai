@@ -32,7 +32,7 @@
 - name: Download Hugging Face model files
   ansible.builtin.command:
     argv:
-      - "{{ home_folder }}/{{ huggingface }}/bin/hf"
+      - "{{ home_folder }}/huggingface/bin/hf"
       - download
       - "{{ item.0.repository }}"
       - "{{ item.1 }}"
@@ -42,6 +42,8 @@
       - "{{ home_folder }}/llama-cpp-models/{{ item.0.name }}"
   args:
     creates: "{{ home_folder }}/llama-cpp-models/{{ item.0.name }}/{{ item.1 }}"
+  environment:
+    HF_TOKEN: "{{ huggingface_secret_key }}"
   loop: "{{ huggingface_models | subelements('files') }}"
   loop_control:
     label: "{{ item.0.name }}/{{ item.1 }}"

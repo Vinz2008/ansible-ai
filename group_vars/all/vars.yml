@@ -1,5 +1,6 @@
-home_folder: "{{ ansible_user_dir }}"
+home_folder: "{{ ansible_facts['user_dir'] }}"
 comfy_dir: "{{ home_folder }}/ComfyUI"
+docker_compose_dir: "{{ home_folder }}/docker_compose"
 # ollama_models:
 #   - llama3.3:70b
 #   - qwen3.6:35b
@@ -27,11 +28,11 @@ huggingface_models:
     files:
       - Qwen_Qwen3.6-35B-A3B-Q4_K_M.gguf
       - mmproj-Qwen_Qwen3.6-35B-A3B-f16.gguf
-  - name: qwen2.5-0.5b
-    repository: bartowski/Llama-3.3-70B-Instruct-GGUF
+  - name: titan-qwen2.5-0.5b
+    repository: theprint/TiTan-Qwen2.5-0.5B-GGUF
     revision: main
     files:
-      - Llama-3.3-70B-Instruct-Q4_K_M.gguf
+      - TiTan-Qwen2.5-0.5B-q4_k_m.gguf
   - name: gemma4-12b
     repository: bartowski/gemma-4-12B-it-GGUF
     revision: main
@@ -42,11 +43,11 @@ huggingface_models:
     repository: bartowski/Qwen_Qwen3.5-9B-GGUF
     revision: main
     files:
-      - Qwen3.5-9B-Q6_K_L.gguf
+      - Qwen_Qwen3.5-9B-Q6_K_L.gguf
       - mmproj-Qwen_Qwen3.5-9B-bf16.gguf
 
   - name: qwen3.5-2b
     repository: bartowski/Qwen_Qwen3.5-2B-GGUF
     revision: main
     files:
-      - Qwen3.5-2B-Q8_0.gguf
+      - Qwen_Qwen3.5-2B-Q8_0.gguf
