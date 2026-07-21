@@ -89,6 +89,32 @@ models:
       --reasoning-budget 192
     ttl: 900
 
+
+  gemma4-12b-image-gen:
+    name: "Gemma 4 12B Image Gen"
+    cmd: >-
+      /usr/local/bin/llama-server
+      --model {{ home_folder }}/llama-cpp-models/gemma4-12b/gemma-4-12B-it-Q6_K.gguf
+      --host 127.0.0.1
+      --port ${PORT}
+      --ctx-size 16384
+      --parallel 1
+      --n-gpu-layers 999
+      --flash-attn on
+      --cache-type-k q8_0
+      --cache-type-v q8_0
+      --jinja
+      --ctx-checkpoints 1
+      --temp 1.0
+      --top-p 0.95
+      --top-k 64
+      --min-p 0.0
+      --presence-penalty 0.0
+      --frequency-penalty 0.0
+      --repeat-penalty 1.0
+      --reasoning-budget 192
+    ttl: 60
+
   qwen3.5-9b:
     name: "Qwen 3.5 9B Vision"
     cmd: >-
@@ -165,3 +191,4 @@ routing:
             - gemma4-12b
             - qwen3.5-9b
             - qwen3.5-2b
+            - gemma4-12b-image-gen
