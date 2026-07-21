@@ -10,6 +10,7 @@ Group={{ ansible_user }}
 ExecStart=/usr/local/bin/llama-swap \
   --config /etc/llama-swap/config.yaml \
   --listen 0.0.0.0:9292
+Environment=GGML_CUDA_ENABLE_UNIFIED_MEMORY=1
 Restart=on-failure
 RestartSec=5
 

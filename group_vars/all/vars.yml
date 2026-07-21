@@ -26,8 +26,13 @@ huggingface_models:
     # Prefer a pinned commit SHA later.
     revision: main
     files:
-      - Qwen_Qwen3.6-35B-A3B-Q4_K_M.gguf
+      - Qwen_Qwen3.6-35B-A3B-Q6_K.gguf
       - mmproj-Qwen_Qwen3.6-35B-A3B-f16.gguf
+  - name: qwen3.6-27b
+    repository: bartowski/Qwen_Qwen3.6-27B-GGUF
+    revision: main
+    files:
+      - Qwen_Qwen3.6-27B-Q6_K_L.gguf
   - name: titan-qwen2.5-0.5b
     repository: theprint/TiTan-Qwen2.5-0.5B-GGUF
     revision: main

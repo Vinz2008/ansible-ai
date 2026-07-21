@@ -103,5 +103,5 @@
     group: root
     mode: "0644"
     content: |
-      options ttm pages_limit=14680064
+      options ttm pages_limit=14680064 page_pool_size=14680064
   notify: Reboot system
