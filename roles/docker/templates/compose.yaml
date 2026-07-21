@@ -32,6 +32,8 @@ services:
       - WEB_SEARCH_RESULT_COUNT=5
       - WEB_SEARCH_CONCURRENT_REQUESTS=5
       - SEARXNG_QUERY_URL=http://searxng:8080/search?q=<query>&format=json
+      - WEBUI_URL=https://ai.vincent-nas.fr
+      - ENABLE_WEBSOCKET_SUPPORT=true
       # - AUDIO_STT_ENGINE="openai"
       # - AUDIO_STT_OPENAI_API_BASE_URL="http://speaches:8000/v1"
       # - AUDIO_STT_OPENAI_API_KEY="does-not-matter-what-you-put-but-should-not-be-empty"
