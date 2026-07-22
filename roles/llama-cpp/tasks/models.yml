@@ -10,7 +10,7 @@
 
 - name: Install Hugging Face Hub CLI
   ansible.builtin.pip:
-    name: huggingface-hub
+    name: huggingface-hub[hf_xet]
     virtualenv: "{{ home_folder }}/huggingface"
     state: present
 
@@ -44,6 +44,7 @@
     creates: "{{ home_folder }}/llama-cpp-models/{{ item.0.name }}/{{ item.1 }}"
   environment:
     HF_TOKEN: "{{ huggingface_secret_key }}"
+    HF_XET_HIGH_PERFORMANCE: "1"
   loop: "{{ huggingface_models | subelements('files') }}"
   loop_control:
     label: "{{ item.0.name }}/{{ item.1 }}"

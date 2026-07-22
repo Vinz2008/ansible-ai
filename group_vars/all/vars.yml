@@ -56,3 +56,9 @@ huggingface_models:
     revision: main
     files:
       - Qwen_Qwen3.5-2B-Q8_0.gguf
+
+  - name: dolphin-mistral-24B
+    repository: bartowski/cognitivecomputations_Dolphin-Mistral-24B-Venice-Edition-GGUF
+    revision: main
+    files:
+      - cognitivecomputations_Dolphin-Mistral-24B-Venice-Edition-Q4_K_M.gguf

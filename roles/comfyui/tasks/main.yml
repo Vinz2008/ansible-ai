@@ -20,7 +20,7 @@
 - name: Install ROCm PyTorch for Strix Halo
   ansible.builtin.pip:
     name:
-      - torch
+      - torch # TODO : should I remove torch
       - torchvision
       - torchaudio
     virtualenv: "{{ comfy_dir }}/venv"
@@ -74,7 +74,10 @@
         --port 8188 \
         --input-directory {{ comfy_dir }}/input \
         --output-directory {{ comfy_dir }}/output \
-        --user-directory {{ comfy_dir }}/user
+        --user-directory {{ comfy_dir }}/user \
+        --bf16-vae \
+        --disable-mmap \
+        --cache-none
       Restart=on-failure
       RestartSec=5
 
