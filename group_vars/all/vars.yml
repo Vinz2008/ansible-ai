@@ -33,6 +33,11 @@ huggingface_models:
     revision: main
     files:
       - Qwen_Qwen3.6-27B-Q4_K_L.gguf
+  - name: qwen3-coder-next
+    repository: unsloth/Qwen3-Coder-Next-GGUF
+    revision: main
+    files:
+      - Qwen3-Coder-Next-UD-Q4_K_M.gguf
   - name: titan-qwen2.5-0.5b
     repository: theprint/TiTan-Qwen2.5-0.5B-GGUF
     revision: main

@@ -4,7 +4,7 @@
   ansible.builtin.git:
     repo: https://github.com/ggml-org/llama.cpp
     dest: "{{ home_folder }}/llama-cpp"
-    version: b10064
+    version: b10107
     update: true
     recursive: true
   register: system_llama_cpp_repository
@@ -68,7 +68,7 @@
   ansible.builtin.git:
     repo: https://github.com/mostlygeek/llama-swap
     dest: "{{ home_folder }}/llama-swap"
-    version: v240
+    version: v243
     update: true
     force: true
   register: system_llama_swap_repository

@@ -3,7 +3,7 @@
 globalTTL: 120
 healthCheckTimeout: 600
 
-# TODO : test --no-mmap for every model to test load time
+# TODO : test --load-mode none (equivalent of --no-mmap) for every model to test load time
 
 models:
 # if RAM is complicated on the 70B model, switch the cache type to q4_0
@@ -21,7 +21,7 @@ models:
       --cache-type-k q8_0
       --cache-type-v q8_0
       --jinja
-      --no-mmap
+      --load-mode none
     ttl: 900
   qwen3.6-35b:
     name: "Qwen 3.6 35B A3B Vision"
@@ -38,7 +38,7 @@ models:
       --cache-type-k q8_0
       --cache-type-v q8_0
       --jinja
-      --no-mmap
+      --load-mode none
       --temp 1.0
       --top-p 0.95
       --top-k 20
@@ -61,8 +61,32 @@ models:
       --cache-type-k q8_0
       --cache-type-v q8_0
       --jinja
-      --no-mmap
+      --load-mode none
     ttl: 120
+
+  qwen3-coder-next:
+    name: "Qwen3 Coder Next"
+    cmd: >-
+      /usr/local/bin/llama-server
+      --model {{ home_folder }}/llama-cpp-models/qwen3-coder-next/Qwen3-Coder-Next-UD-Q4_K_M.gguf
+      --host 127.0.0.1
+      --port ${PORT}
+      --ctx-size 32768
+      --parallel 1
+      --n-gpu-layers 999
+      --flash-attn on
+      --cache-type-k q8_0
+      --cache-type-v q8_0
+      --jinja
+      --load-mode none
+      --temp 1.0
+      --top-p 0.95
+      --top-k 40
+    ttl: 600
+    
+# TODO : mistral 24B
+# TODO : bigger gemma
+# TODO : gpt-oss
 
   gemma4-12b:
     name: "Gemma 4 12B Vision"
@@ -79,7 +103,7 @@ models:
       --cache-type-k q8_0
       --cache-type-v q8_0
       --jinja
-      --no-mmap
+      --load-mode none
       --ctx-checkpoints 1
       --temp 1.0
       --top-p 0.95
@@ -106,7 +130,7 @@ models:
       --cache-type-k q8_0
       --cache-type-v q8_0
       --jinja
-      --no-mmap
+      --load-mode none
       --ctx-checkpoints 1
       --temp 1.0
       --top-p 0.95
@@ -133,7 +157,7 @@ models:
       --cache-type-k q8_0
       --cache-type-v q8_0
       --jinja
-      --no-mmap
+      --load-mode none
     ttl: 300
 
   qwen3.5-2b:
@@ -150,7 +174,7 @@ models:
       --cache-type-k q8_0
       --cache-type-v q8_0
       --jinja
-      --no-mmap
+      --load-mode none
     ttl: 300
   
   dolphin-mistral-24B:
@@ -164,7 +188,7 @@ models:
       --parallel 1
       --n-gpu-layers 999
       --flash-attn on
-      --no-mmap
+      --load-mode none
       --cache-type-k q8_0
       --cache-type-v q8_0
       --jinja
@@ -183,7 +207,7 @@ models:
       --threads 4
       --n-gpu-layers 0
       --jinja
-      --no-mmap
+      --load-mode none
     ttl: 0
 
 
