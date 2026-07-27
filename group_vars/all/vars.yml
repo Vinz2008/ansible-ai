@@ -67,3 +67,9 @@ huggingface_models:
     revision: main
     files:
       - cognitivecomputations_Dolphin-Mistral-24B-Venice-Edition-Q4_K_M.gguf
+
+  - name: gpt-oss-20b
+    repository: bartowski/openai_gpt-oss-20b-GGUF
+    revision: main
+    files:
+      - openai_gpt-oss-20b-MXFP4.gguf

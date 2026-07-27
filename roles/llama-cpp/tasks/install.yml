@@ -28,6 +28,8 @@
       - -DGGML_HIP_ROCWMMA_FATTN=OFF # TODO : test enabling rocwmma
       - -DCMAKE_BUILD_TYPE=Release
       - -DCMAKE_INSTALL_PREFIX=/usr/local
+      - -G
+      - Ninja
   when:
     - system_llama_cpp_repository.changed or not system_llama_cpp_cmake_cache.stat.exists
   changed_when: true

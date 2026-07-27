@@ -17,6 +17,3 @@
     - role: docker
       tags:
         - containers
-    # - role: models
-    #   tags:
-    #     - models
