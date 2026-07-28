@@ -220,6 +220,27 @@ models:
       --repeat-penalty 1.0
     ttl: 600
 
+# TODO : if not good enough, use the Bartowski Q6_K 
+  gemma4-26b-a4b:
+    name: "Gemma 4 26B A4B"
+    cmd: >-
+      /usr/local/bin/llama-server
+      --model {{ home_folder }}/llama-cpp-models/gemma4-26b-a4b/gemma-4-26B_q4_0-it.gguf
+      --mmproj {{ home_folder }}/llama-cpp-models/gemma4-26b-a4b/gemma-4-26B-it-mmproj.gguf
+      --host 127.0.0.1
+      --port ${PORT}
+      --ctx-size 65536
+      --parallel 1
+      --n-gpu-layers 999
+      --flash-attn on
+      --cache-type-k q8_0
+      --cache-type-v q8_0
+      --jinja
+      --load-mode none
+      --temp 1.0
+      --top-p 0.95
+      --top-k 64
+
   # qwen title is kept on cpu (--n-gpu-layers 0)
   # TODO : in the future, maybe use it on the npu ?
   qwen-title:
