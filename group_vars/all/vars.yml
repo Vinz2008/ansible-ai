@@ -1,17 +1,15 @@
 home_folder: "{{ ansible_facts['user_dir'] }}"
 comfy_dir: "{{ home_folder }}/ComfyUI"
 docker_compose_dir: "{{ home_folder }}/docker_compose"
-# ollama_models:
-#   - llama3.3:70b
-#   - qwen3.6:35b
-# # TODO : maybe Qwen3.6 27B ?
-# # TODO : maybe a mistral model ?
-# # gpt-oss ?
-#   - gemma4:12b
-#   - hf.co/bartowski/Qwen_Qwen3.5-9B-GGUF:Q6_K_L
-#   - qwen3.5:2b
-#   - qwen2.5:0.5b
-# # TODO : uncensored model
+
+# TODO : update these sometimes ?
+llama_cpp_version: b10107
+llama_swap_version: v243
+
+# TODO : maybe a mistral model ? (test mistral-small3.2 and mistralai/Devstral-Small-2-24B-Instruct-2512)
+# TODO : maybe even try unsloth/Mistral-Small-4-119B-2603-GGUF with a small quantization
+# TODO : try OpenLLM-France/Luciole-Instruct-1.1
+# TODO : uncensored model
 
 # this would be used with llama-cpp
 # TODO : move this in vars in the llama-cpp role ?
@@ -38,11 +36,6 @@ huggingface_models:
     revision: main
     files:
       - Qwen3-Coder-Next-UD-Q4_K_M.gguf
-  - name: titan-qwen2.5-0.5b
-    repository: theprint/TiTan-Qwen2.5-0.5B-GGUF
-    revision: main
-    files:
-      - TiTan-Qwen2.5-0.5B-q4_k_m.gguf
   - name: gemma4-12b
     repository: bartowski/gemma-4-12B-it-GGUF
     revision: main
@@ -56,23 +49,17 @@ huggingface_models:
       - Qwen_Qwen3.5-9B-Q6_K_L.gguf
       - mmproj-Qwen_Qwen3.5-9B-bf16.gguf
 
-  - name: qwen3.5-2b
-    repository: bartowski/Qwen_Qwen3.5-2B-GGUF
+  - name: qwen-title
+    repository: Qwen/Qwen2.5-1.5B-Instruct-GGUF
     revision: main
     files:
-      - Qwen_Qwen3.5-2B-Q8_0.gguf
+      - qwen2.5-1.5b-instruct-q5_k_m.gguf
 
   - name: dolphin-mistral-24B
     repository: bartowski/cognitivecomputations_Dolphin-Mistral-24B-Venice-Edition-GGUF
     revision: main
     files:
       - cognitivecomputations_Dolphin-Mistral-24B-Venice-Edition-Q4_K_M.gguf
-
-  - name: gpt-oss-20b
-    repository: bartowski/openai_gpt-oss-20b-GGUF
-    revision: main
-    files:
-      - openai_gpt-oss-20b-MXFP4.gguf
 
   - name: gemma4-26b-a4b
     repository: google/gemma-4-26B-A4B-it-qat-q4_0-gguf

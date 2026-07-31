@@ -38,8 +38,6 @@ models:
       --parallel 1
       --n-gpu-layers 999
       --flash-attn on
-      --cache-type-k q8_0
-      --cache-type-v q8_0
       --jinja
       --load-mode none
       --temp 1.0
@@ -48,6 +46,9 @@ models:
       --min-p 0.0
       --presence-penalty 1.5
       --repeat-penalty 1.0
+      --reasoning-budget 8192
+#      --cache-type-k q8_0
+#      --cache-type-v q8_0
     ttl: 900
 
   qwen3.6-27b:
@@ -89,6 +90,27 @@ models:
     
 # TODO : mistral 24B
 # TODO : bigger gemma
+
+# TODO : if not good enough, use the Bartowski Q6_K 
+  gemma4-26b-a4b:
+    name: "Gemma 4 26B A4B"
+    cmd: >-
+      /usr/local/bin/llama-server
+      --model {{ home_folder }}/llama-cpp-models/gemma4-26b-a4b/gemma-4-26B_q4_0-it.gguf
+      --mmproj {{ home_folder }}/llama-cpp-models/gemma4-26b-a4b/gemma-4-26B-it-mmproj.gguf
+      --host 127.0.0.1
+      --port ${PORT}
+      --ctx-size 65536
+      --parallel 1
+      --n-gpu-layers 999
+      --flash-attn on
+      --jinja
+      --load-mode none
+      --temp 1.0
+      --top-p 0.95
+      --top-k 64
+#      --cache-type-k q8_0
+#      --cache-type-v q8_0
 
   gemma4-12b:
     name: "Gemma 4 12B Vision"
@@ -161,24 +183,6 @@ models:
       --jinja
       --load-mode none
     ttl: 300
-
-# TODO : maybe remove it
-  qwen3.5-2b:
-    name: "Qwen 3.5 2B Utility"
-    cmd: >-
-      /usr/local/bin/llama-server
-      --model {{ home_folder }}/llama-cpp-models/qwen3.5-2b/Qwen_Qwen3.5-2B-Q8_0.gguf
-      --host 127.0.0.1
-      --port ${PORT}
-      --ctx-size 32768
-      --parallel 2
-      --n-gpu-layers 999
-      --flash-attn on
-      --cache-type-k q8_0
-      --cache-type-v q8_0
-      --jinja
-      --load-mode none
-    ttl: 300
   
   dolphin-mistral-24B:
     name: "Dolphin Mistral 24B"
@@ -197,64 +201,24 @@ models:
       --jinja
     ttl: 300
 
-# TODO : maybe remove it
-  gpt-oss-20b:
-    name: "GPT OSS 20B"
-    cmd: >-
-      /usr/local/bin/llama-server
-      --model {{ home_folder }}/llama-cpp-models/gpt-oss-20b/openai_gpt-oss-20b-MXFP4.gguf
-      --port ${PORT}
-      --ctx-size 32768
-      --parallel 1
-      --n-gpu-layers 999
-      --flash-attn on
-      --load-mode none
-      --cache-type-k q8_0
-      --cache-type-v q8_0
-      --jinja
-      --reasoning-format auto
-      --temp 1.0
-      --top-p 1.0
-      --top-k 0
-      --min-p 0.0
-      --repeat-penalty 1.0
-    ttl: 600
-
-# TODO : if not good enough, use the Bartowski Q6_K 
-  gemma4-26b-a4b:
-    name: "Gemma 4 26B A4B"
-    cmd: >-
-      /usr/local/bin/llama-server
-      --model {{ home_folder }}/llama-cpp-models/gemma4-26b-a4b/gemma-4-26B_q4_0-it.gguf
-      --mmproj {{ home_folder }}/llama-cpp-models/gemma4-26b-a4b/gemma-4-26B-it-mmproj.gguf
-      --host 127.0.0.1
-      --port ${PORT}
-      --ctx-size 65536
-      --parallel 1
-      --n-gpu-layers 999
-      --flash-attn on
-      --cache-type-k q8_0
-      --cache-type-v q8_0
-      --jinja
-      --load-mode none
-      --temp 1.0
-      --top-p 0.95
-      --top-k 64
-
   # qwen title is kept on cpu (--n-gpu-layers 0)
+  # TODO : maybe test 4096 for ctx-size ?
+  # TODO : test Q4_K_M
   # TODO : in the future, maybe use it on the npu ?
   qwen-title:
     cmd: >-
       /usr/local/bin/llama-server
-      --model /home/vincent/llama-cpp-models/titan-qwen2.5-0.5b/TiTan-Qwen2.5-0.5B-q4_k_m.gguf
+      --model {{ home_folder }}/llama-cpp-models/qwen-title/qwen2.5-1.5b-instruct-q5_k_m.gguf
       --host 127.0.0.1
       --port ${PORT}
-      --ctx-size 4096
-      --parallel 2
+      --ctx-size 8192
+      --parallel 1
       --threads 4
       --n-gpu-layers 0
+      --flash-attn auto
       --jinja
-      --load-mode none
+      --temp 0.2
+      --top-p 0.9
     ttl: 0
 
 
@@ -284,7 +248,5 @@ routing:
             - qwen3.6-27b
             - gemma4-12b
             - qwen3.5-9b
-            - qwen3.5-2b
             - gemma4-12b-image-gen
             - dolphin-mistral-24B
-            - gpt-oss-20b
