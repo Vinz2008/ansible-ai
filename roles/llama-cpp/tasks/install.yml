@@ -114,6 +114,8 @@
     - system_llama_vulkan_cpp_repository.changed or not system_llama_cpp_vulkan_server_binary.stat.exists
   changed_when: true
 
+# TODO : build rocmfpx
+
 - name: Clone llama-swap
   ansible.builtin.git:
     repo: https://github.com/mostlygeek/llama-swap
