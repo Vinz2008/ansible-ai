@@ -1,5 +1,14 @@
-- name: Install llama-cpp
-  ansible.builtin.import_tasks: install.yml
+- name: Install llama-cpp rocm
+  ansible.builtin.import_tasks: install-rocm.yml
+
+- name: Install llama-cpp vulkan
+  ansible.builtin.import_tasks: install-vulkan.yml
+
+- name: Install rocmfpx
+  ansible.builtin.import_tasks: install-rocmfpx.yml
+
+- name: Install llama-swap
+  ansible.builtin.import_tasks: install-swap.yml
 
 - name: Download models
   ansible.builtin.import_tasks: models.yml

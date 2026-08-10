@@ -3,9 +3,12 @@
 globalTTL: 120
 healthCheckTimeout: 600
 
+# uncomment this to debug
+# logLevel: debug
+# logToStdout: both
+
 # TODO : test --load-mode none (equivalent of --no-mmap) for every model to test load time
 # TODO : test which is better with vulkan and which is better with rocm 
-# TODO : add the vulkan build as build step in the install.yml ?
 
 models:
 # if RAM is complicated on the 70B model, switch the cache type to q4_0
@@ -239,6 +242,24 @@ models:
       --top-p 0.9
     ttl: 0
 
+  comfyui_auto:
+    name: "ComfyUI"
+    proxy: "http://127.0.0.1:8188"
+    checkEndpoint: /
+    websocket:
+      ignore: true
+    cmd: >-
+      {{ comfy_dir }}/venv/bin/python 
+      {{ comfy_dir }}/comfyui-git/main.py
+        --listen 127.0.0.1
+        --port 8188
+        --input-directory {{ comfy_dir }}/input
+        --output-directory {{ comfy_dir }}/output
+        --user-directory {{ comfy_dir }}/user
+        --bf16-vae
+
+  # TODO : change this to 0 ?
+    ttl: 3600
 
 hooks:
   on_startup:
@@ -247,25 +268,21 @@ hooks:
 
 routing:
   router:
-    use: group
+    use: matrix
     settings:
-      groups:
-        task-model:
-          persistent: true
-          swap: false
-          exclusive: false
-          members:
-            - qwen-title
-
-        large-models:
-          swap: true
-          exclusive: false
-          members:
-            - llama3.3-70b
-            - qwen3.6-35b
-            - qwen3.6-27b
-            - qwen3.6-27b-rocmfpx
-            - gemma4-12b
-            - qwen3.5-9b
-            - gemma4-12b-image-gen
-            - dolphin-mistral-24B
+      matrix:
+        vars:
+          title: qwen-title
+          comfy: comfyui_auto
+        sets:
+          image: "title & comfy & gemma4-12b-image-gen"
+          llms: >-
+            title & (llama3.3-70b |
+            qwen3.6-35b |
+            qwen3.6-27b |
+            qwen3.6-27b-rocmfpx |
+            qwen3-coder-next |
+            gemma4-26b-a4b |
+            gemma4-12b |
+            qwen3.5-9b |
+            dolphin-mistral-24B)

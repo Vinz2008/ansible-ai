@@ -1,0 +1,65 @@
+- name: Clone llama-cpp
+  ansible.builtin.git:
+    repo: https://github.com/ggml-org/llama.cpp
+    dest: "{{ home_folder }}/llama-cpp"
+    version: "{{ llama_cpp_version }}"
+    update: true
+    recursive: true
+  register: system_llama_cpp_repository
+
+- name: Check whether llama.cpp is configured
+  ansible.builtin.stat:
+    path: "{{ home_folder }}/llama-cpp/build/CMakeCache.txt"
+  register: system_llama_cpp_cmake_cache
+
+- name: Configure llama-cpp with cmake
+  ansible.builtin.command:
+    argv:
+      - cmake
+      - -S
+      - "{{ home_folder }}/llama-cpp"
+      - -B
+      - "{{ home_folder }}/llama-cpp/build"
+      - -DGGML_HIP=ON
+      - -DAMDGPU_TARGETS=gfx1151
+      - -DLLAMA_HIP_UMA=ON
+      - -DGGML_HIP_ROCWMMA_FATTN=OFF # TODO : test enabling rocwmma
+      - -DCMAKE_BUILD_TYPE=Release
+      - -DCMAKE_INSTALL_PREFIX=/usr/local
+      - -G
+      - Ninja
+  when:
+    - system_llama_cpp_repository.changed or not system_llama_cpp_cmake_cache.stat.exists
+  changed_when: true
+
+- name: Check whether llama-server exists in the build dir
+  ansible.builtin.stat:
+    path: "{{ home_folder }}/llama-cpp/build/bin/llama-server"
+  register: system_llama_cpp_server_binary
+
+- name: Build llama.cpp
+  ansible.builtin.command:
+    argv:
+      - cmake
+      - --build
+      - "{{ home_folder }}/llama-cpp/build"
+      - --parallel
+      - "{{ ansible_facts.processor_vcpus | default(4) | string }}"
+  when:
+    - system_llama_cpp_repository.changed or not system_llama_cpp_server_binary.stat.exists
+  changed_when: true
+
+- name: Check whether llama-server is installed
+  ansible.builtin.stat:
+    path: /usr/local/bin/llama-server
+  register: system_llama_cpp_installed_binary
+
+- name: Install llama.cpp
+  become: true
+  ansible.builtin.command:
+    argv:
+      - cmake
+      - --install
+      - "{{ home_folder }}/llama-cpp/build"
+  when: system_llama_cpp_repository.changed or not system_llama_cpp_installed_binary.stat.exists
+  changed_when: true

@@ -1,0 +1,36 @@
+- name: Clone llama-swap
+  ansible.builtin.git:
+    repo: https://github.com/mostlygeek/llama-swap
+    dest: "{{ home_folder }}/llama-swap"
+    version: "{{ llama_swap_version }}"
+    update: true
+    force: true
+  register: system_llama_swap_repository
+
+- name: Check whether llama-swap exists in the build dir
+  ansible.builtin.stat:
+    path: "{{ home_folder }}/llama-swap/build/llama-swap-linux-amd64"
+  register: system_llama_swap_binary
+
+- name: Build llama-swap
+  ansible.builtin.command:
+    cmd: make clean linux-amd64
+    chdir: "{{ home_folder }}/llama-swap"
+  when:
+    - system_llama_swap_repository.changed or not system_llama_swap_binary.stat.exists
+  changed_when: true
+
+- name: Check whether llama-swap is installed
+  ansible.builtin.stat:
+    path: /usr/local/bin/llama-swap
+  register: system_llama_swap_installed_binary
+
+- name: Install llama-swap binary
+  become: true
+  ansible.builtin.copy:
+    dest: /usr/local/bin/llama-swap
+    remote_src: true
+    src: "{{ home_folder }}/llama-swap/build/llama-swap-linux-amd64"
+    mode: "0755"
+  when: system_llama_swap_repository.changed or not system_llama_swap_installed_binary.stat.exists
+  changed_when: true

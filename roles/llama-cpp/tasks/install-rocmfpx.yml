@@ -1,0 +1,24 @@
+- name: Clone rocmfpx
+  ansible.builtin.git:
+    repo: https://github.com/charlie12345/ROCmFPX
+    dest: "{{ home_folder }}/llama-cpp-rocmfpx"
+    version: "main"
+    update: true
+    recursive: true
+  register: system_rocmfpx_cpp_repository
+
+- name: Check whether rocmfpx exists in the build dir
+  ansible.builtin.stat:
+    path: "{{ home_folder }}/llama-cpp-rocmfpx/build-strix-rocmfp4/bin/llama-server"
+  register: system_rocmfpx_server_binary
+
+- name: Build rocmfpx
+  ansible.builtin.command:
+    argv:
+      - scripts/build-strix-rocmfp4-mtp.sh
+    chdir: "{{ home_folder }}/llama-cpp-rocmfpx"
+  environment:
+    JOBS: "{{ ansible_facts.processor_vcpus | default(4) | string }}"
+  when:
+    - system_rocmfpx_cpp_repository.changed or not system_rocmfpx_server_binary.stat.exists
+  changed_when: true

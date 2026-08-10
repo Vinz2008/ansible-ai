@@ -1,0 +1,46 @@
+- name: Clone llama-cpp vulkan
+  ansible.builtin.git:
+    repo: https://github.com/ggml-org/llama.cpp
+    dest: "{{ home_folder }}/llama-cpp-vulkan"
+    version: "{{ llama_cpp_version }}"
+    update: true
+    recursive: true
+  register: system_llama_vulkan_cpp_repository
+
+- name: Check whether llama.cpp vulkan is configured
+  ansible.builtin.stat:
+    path: "{{ home_folder }}/llama-cpp-vulkan/build-vulkan/CMakeCache.txt"
+  register: system_llama_cpp_vulkan_cmake_cache
+
+- name: Configure llama-cpp vulkan with cmake
+  ansible.builtin.command:
+    argv:
+      - cmake
+      - -S
+      - "{{ home_folder }}/llama-cpp-vulkan"
+      - -B
+      - "{{ home_folder }}/llama-cpp-vulkan/build-vulkan"
+      - -DGGML_VULKAN=ON
+      - -DCMAKE_BUILD_TYPE=Release
+      - -G
+      - Ninja
+  when:
+    - system_llama_vulkan_cpp_repository.changed or not system_llama_cpp_vulkan_cmake_cache.stat.exists
+  changed_when: true
+
+- name: Check whether llama-server vulkan exists in the build dir
+  ansible.builtin.stat:
+    path: "{{ home_folder }}/llama-cpp-vulkan/build-vulkan/bin/llama-server"
+  register: system_llama_cpp_vulkan_server_binary
+
+- name: Build llama.cpp vulkan
+  ansible.builtin.command:
+    argv:
+      - cmake
+      - --build
+      - "{{ home_folder }}/llama-cpp-vulkan/build-vulkan"
+      - --parallel
+      - "{{ ansible_facts.processor_vcpus | default(4) | string }}"
+  when:
+    - system_llama_vulkan_cpp_repository.changed or not system_llama_cpp_vulkan_server_binary.stat.exists
+  changed_when: true

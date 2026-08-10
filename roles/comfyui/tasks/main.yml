@@ -20,7 +20,7 @@
 - name: Install ROCm PyTorch for Strix Halo
   ansible.builtin.pip:
     name:
-      - torch # TODO : should I remove torch
+      - torch
       - torchvision
       - torchaudio
     virtualenv: "{{ comfy_dir }}/venv"
@@ -57,35 +57,36 @@
     state: directory
     mode: "0755"
 
-- name: Install ComfyUI user service
-  ansible.builtin.copy:
-    dest: "{{ home_folder }}/.config/systemd/user/comfyui.service"
-    mode: "0644"
-    content: |
-      [Unit]
-      Description=ComfyUI
-      After=network-online.target
-      Wants=network-online.target
+# TODO : remove this if the one in llama-swap work
+# - name: Install ComfyUI user service
+#   ansible.builtin.copy:
+#     dest: "{{ home_folder }}/.config/systemd/user/comfyui.service"
+#     mode: "0644"
+#     content: |
+#       [Unit]
+#       Description=ComfyUI
+#       After=network-online.target
+#       Wants=network-online.target
 
-      [Service]
-      WorkingDirectory={{ comfy_dir }}/comfyui-git
-      ExecStart={{ comfy_dir }}/venv/bin/python {{ comfy_dir }}/comfyui-git/main.py \
-        --listen 0.0.0.0 \
-        --port 8188 \
-        --input-directory {{ comfy_dir }}/input \
-        --output-directory {{ comfy_dir }}/output \
-        --user-directory {{ comfy_dir }}/user \
-        --bf16-vae \
-        --disable-mmap \
-        --cache-none
-      Restart=on-failure
-      RestartSec=5
+#       [Service]
+#       WorkingDirectory={{ comfy_dir }}/comfyui-git
+#       ExecStart={{ comfy_dir }}/venv/bin/python {{ comfy_dir }}/comfyui-git/main.py \
+#         --listen 0.0.0.0 \
+#         --port 8188 \
+#         --input-directory {{ comfy_dir }}/input \
+#         --output-directory {{ comfy_dir }}/output \
+#         --user-directory {{ comfy_dir }}/user \
+#         --bf16-vae \
+#         --disable-mmap \
+#         --cache-none
+#       Restart=on-failure
+#       RestartSec=5
 
-      [Install]
-      WantedBy=default.target
-  notify:
-    - Reload user systemd
-    - Restart ComfyUI
+#       [Install]
+#       WantedBy=default.target
+#   notify:
+#     - Reload user systemd
+#     - Restart ComfyUI
 
 
 - name: Enable lingering for current user
@@ -94,15 +95,14 @@
     cmd: "loginctl enable-linger {{ ansible_user }}"
     creates: "/var/lib/systemd/linger/{{ ansible_user }}"
 
-- name: Enable and start ComfyUI service
-  ansible.builtin.systemd_service:
-    name: comfyui.service
-    scope: user
-    enabled: true
-    state: started
+# - name: Enable and start ComfyUI service
+#   ansible.builtin.systemd_service:
+#     name: comfyui.service
+#     scope: user
+#     enabled: true
+#     state: started
 
-# TODO : comfyui
-# ... (need to add a Unload All Models node at the end of image generation wokflows https://forum.comfy.org/t/automatically-unload-models-from-vram/1511)
+# (need to add a Unload All Models node at the end of image generation wokflows https://forum.comfy.org/t/automatically-unload-models-from-vram/1511)
 
 # TODO : comfyui workflows (create them step by step instead of just importing one at the end, but can still look at one to fix problems)
 # workflows
