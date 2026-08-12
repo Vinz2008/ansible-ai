@@ -39,6 +39,7 @@
       - ca-certificates
       - curl
       - git
+      - xz
       - python3
       - mesa-libGL
       - glib2

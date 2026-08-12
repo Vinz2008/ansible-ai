@@ -1,0 +1,37 @@
+- name: Check whether Hermes is already installed
+  ansible.builtin.stat:
+    path: "{{ home_folder }}/.local/bin/hermes"
+  register: hermes_binary
+
+- name: Download Hermes installer
+  ansible.builtin.get_url:
+    url: https://hermes-agent.nousresearch.com/install.sh
+    dest: /tmp/hermes-install.sh
+    mode: "0755"
+  when: not hermes_binary.stat.exists
+
+- name: Install Hermes
+  ansible.builtin.command:
+    cmd: /tmp/hermes-install.sh --skip-browser --non-interactive --skip-setup
+    creates: "{{ home_folder }}/.local/bin/hermes"
+  environment:
+    HOME: "{{ home_folder }}"
+
+- name: Install Hermes config
+  ansible.builtin.template:
+    src: config.yaml
+    dest: "{{ home_folder }}/.hermes/config.yaml"
+    mode: "0600"
+  notify:
+    - Restart Hermes dashboard
+
+
+- name: Install Hermes dashboard user service
+  become: true
+  ansible.builtin.template:
+    dest: "{{ home_folder }}/.config/systemd/user/hermes-dashboard.service"
+    src: hermes-dashboard.service
+    mode: "0644"
+  notify:
+    - Reload systemd
+    - Restart Hermes dashboard

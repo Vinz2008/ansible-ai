@@ -14,6 +14,9 @@
     - role: llama-cpp
       tags:
         - llama-cpp
+    - role: hermes
+      tags:
+        - hermes
     - role: docker
       tags:
         - containers

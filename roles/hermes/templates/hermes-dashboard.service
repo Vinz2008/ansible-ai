@@ -1,0 +1,15 @@
+[Unit]
+Description=Hermes Agent Dashboard
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+Environment=HOME=/home/vincent
+WorkingDirectory=/home/vincent/.hermes/hermes-agent
+ExecStart=/home/vincent/.local/bin/hermes dashboard --host 0.0.0.0 --port 9119 --no-open --tui
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=default.target
