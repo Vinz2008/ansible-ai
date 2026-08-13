@@ -25,13 +25,13 @@
       - torchaudio
     virtualenv: "{{ comfy_dir }}/venv"
     extra_args: "--pre --index-url https://rocm.nightlies.amd.com/v2/gfx1151/"
-  notify: Restart ComfyUI
+  # notify: Restart ComfyUI
 
 - name: Install ComfyUI requirements
   ansible.builtin.pip:
     requirements: "{{ comfy_dir }}/comfyui-git/requirements.txt"
     virtualenv: "{{ comfy_dir }}/venv"
-  notify: Restart ComfyUI
+  # notify: Restart ComfyUI
 
 - name: Create ComfyUI data directories
   ansible.builtin.file:

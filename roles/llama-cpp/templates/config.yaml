@@ -111,6 +111,25 @@ models:
       --host 0.0.0.0
       --port ${PORT}
 
+  qwen3.6-27b-rocmfpx-hermes:
+    name: "Qwen 3.6 27B ROCmFPX Hermes"
+    cmd: >-
+      /home/vincent/llama-cpp-rocmfpx/build-strix-rocmfp4/bin/llama-server
+      --model /home/vincent/llama-cpp-models/qwen3.6-27b-rocmfp4/Qwen3.6-27B-MTP-ROCmFP4-STRIX-imatrix-embF16-headQ6.gguf
+      --device Vulkan0
+      --gpu-layers 999
+      --flash-attn on
+      --ctx-size 131072
+      --parallel 1
+      --batch-size 2048
+      --ubatch-size 256
+      --spec-type draft-mtp
+      --spec-draft-n-max 2
+      --jinja
+      --chat-template-file /home/vincent/llama-cpp-models/qwen3.6-27b-rocmfp4/chat_template.jinja
+      --host 0.0.0.0
+      --port ${PORT}
+
   qwen3-coder-next:
     name: "Qwen3 Coder Next"
     cmd: >-
@@ -307,4 +326,4 @@ routing:
             gemma4-26b-a4b |
             gemma4-12b |
             qwen3.5-9b |
-            dolphin-mistral-24B | qwen3.6-35b-hermes)
+            dolphin-mistral-24B | qwen3.6-35b-hermes | qwen3.6-27b-rocmfpx-hermes)
