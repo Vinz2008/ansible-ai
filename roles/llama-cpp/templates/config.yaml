@@ -31,8 +31,8 @@ models:
   qwen3.6-35b:
     name: "Qwen 3.6 35B A3B Vision"
     cmd: >-
-      env LD_LIBRARY_PATH=/home/vincent/llama-cpp-vulkan/build-vulkan/bin
-      /home/vincent/llama-cpp-vulkan/build-vulkan/bin/llama-server
+      env LD_LIBRARY_PATH={{ home_folder }}/llama-cpp-vulkan/build-vulkan/bin
+      {{ home_folder }}/llama-cpp-vulkan/build-vulkan/bin/llama-server
       --model {{ home_folder }}/llama-cpp-models/qwen3.6-35b/Qwen_Qwen3.6-35B-A3B-Q5_K_M.gguf
       --mmproj {{ home_folder }}/llama-cpp-models/qwen3.6-35b/mmproj-Qwen_Qwen3.6-35B-A3B-f16.gguf
       --host 127.0.0.1
@@ -57,8 +57,8 @@ models:
   qwen3.6-35b-hermes:
     name: "Qwen 3.6 35B A3B Hermes"
     cmd: >-
-      env LD_LIBRARY_PATH=/home/vincent/llama-cpp-vulkan/build-vulkan/bin
-      /home/vincent/llama-cpp-vulkan/build-vulkan/bin/llama-server
+      env LD_LIBRARY_PATH={{ home_folder }}/llama-cpp-vulkan/build-vulkan/bin
+      {{ home_folder }}/llama-cpp-vulkan/build-vulkan/bin/llama-server
       --model {{ home_folder }}/llama-cpp-models/qwen3.6-35b/Qwen_Qwen3.6-35B-A3B-Q5_K_M.gguf
       --host 127.0.0.1
       --port ${PORT}
@@ -96,8 +96,8 @@ models:
   qwen3.6-27b-rocmfpx:
     name: "Qwen 3.6 27B ROCmFPX"
     cmd: >-
-      /home/vincent/llama-cpp-rocmfpx/build-strix-rocmfp4/bin/llama-server
-      --model /home/vincent/llama-cpp-models/qwen3.6-27b-rocmfp4/Qwen3.6-27B-MTP-ROCmFP4-STRIX-imatrix-embF16-headQ6.gguf
+      {{ home_folder }}/llama-cpp-rocmfpx/build-strix-rocmfp4/bin/llama-server
+      --model {{ home_folder }}/llama-cpp-models/qwen3.6-27b-rocmfp4/Qwen3.6-27B-MTP-ROCmFP4-STRIX-imatrix-embF16-headQ6.gguf
       --device Vulkan0
       --gpu-layers 999
       --flash-attn on
@@ -107,15 +107,15 @@ models:
       --spec-type draft-mtp
       --spec-draft-n-max 4
       --jinja
-      --chat-template-file /home/vincent/llama-cpp-models/qwen3.6-27b-rocmfp4/chat_template.jinja
+      --chat-template-file {{ home_folder }}/llama-cpp-models/qwen3.6-27b-rocmfp4/chat_template.jinja
       --host 0.0.0.0
       --port ${PORT}
 
   qwen3.6-27b-rocmfpx-hermes:
     name: "Qwen 3.6 27B ROCmFPX Hermes"
     cmd: >-
-      /home/vincent/llama-cpp-rocmfpx/build-strix-rocmfp4/bin/llama-server
-      --model /home/vincent/llama-cpp-models/qwen3.6-27b-rocmfp4/Qwen3.6-27B-MTP-ROCmFP4-STRIX-imatrix-embF16-headQ6.gguf
+      {{ home_folder }}/llama-cpp-rocmfpx/build-strix-rocmfp4/bin/llama-server
+      --model {{ home_folder }}/llama-cpp-models/qwen3.6-27b-rocmfp4/Qwen3.6-27B-MTP-ROCmFP4-STRIX-imatrix-embF16-headQ6.gguf
       --device Vulkan0
       --gpu-layers 999
       --flash-attn on
@@ -126,9 +126,63 @@ models:
       --spec-type draft-mtp
       --spec-draft-n-max 2
       --jinja
-      --chat-template-file /home/vincent/llama-cpp-models/qwen3.6-27b-rocmfp4/chat_template.jinja
+      --chat-template-file {{ home_folder }}/llama-cpp-models/qwen3.6-27b-rocmfp4/chat_template.jinja
       --host 0.0.0.0
       --port ${PORT}
+
+  # TODO : try these qwen3.8 27B with rocmfpx ?
+  qwen3.8-27b:
+    name: "Qwen 3.8 27B"
+    cmd: >-
+      env LD_LIBRARY_PATH={{ home_folder }}/llama-cpp-vulkan/build-vulkan/bin
+      {{ home_folder }}/llama-cpp-vulkan/build-vulkan/bin/llama-server
+      --model {{ home_folder }}/llama-cpp-models/qwen3.8-27b/Qwen3.8-27B-Q5_K_L.gguf
+      --mmproj {{ home_folder }}/llama-cpp-models/qwen3.8-27b/mmproj-Qwen3.8-27B-f16.gguf
+      --host 127.0.0.1
+      --port ${PORT}
+      --ctx-size 32768
+      --parallel 1
+      --gpu-layers 999
+      --flash-attn on
+      --cache-type-k q8_0
+      --cache-type-v q8_0
+      --spec-type draft-mtp
+      --spec-draft-n-max 4
+      --jinja
+      --load-mode none
+      --temp 1.0
+      --top-p 0.95
+      --top-k 20
+      --min-p 0.0
+      --presence-penalty 0.0
+      --repeat-penalty 1.0
+
+  qwen3.8-27b-hermes:
+    name: "Qwen 3.8 27B Hermes"
+    cmd: >-
+      env LD_LIBRARY_PATH={{ home_folder }}/llama-cpp-vulkan/build-vulkan/bin
+      {{ home_folder }}/llama-cpp-vulkan/build-vulkan/bin/llama-server
+      --model {{ home_folder }}/llama-cpp-models/qwen3.8-27b/Qwen3.8-27B-Q5_K_L.gguf
+      --mmproj {{ home_folder }}/llama-cpp-models/qwen3.8-27b/mmproj-Qwen3.8-27B-f16.gguf
+      --host 127.0.0.1
+      --port ${PORT}
+      --ctx-size 131072
+      --parallel 1
+      --gpu-layers 999
+      --flash-attn on
+      --cache-type-k q8_0
+      --cache-type-v q8_0
+      --spec-type draft-mtp
+      --spec-draft-n-max 4
+      --jinja
+      --load-mode none
+      --temp 1.0
+      --top-p 0.95
+      --top-k 20
+      --min-p 0.0
+      --presence-penalty 0.0
+      --repeat-penalty 1.0
+
 
   qwen3-coder-next:
     name: "Qwen3 Coder Next"
@@ -326,4 +380,8 @@ routing:
             gemma4-26b-a4b |
             gemma4-12b |
             qwen3.5-9b |
-            dolphin-mistral-24B | qwen3.6-35b-hermes | qwen3.6-27b-rocmfpx-hermes)
+            dolphin-mistral-24B | 
+            qwen3.6-35b-hermes | 
+            qwen3.6-27b-rocmfpx-hermes |
+            qwen3.8-27b |
+            qwen3.8-27b-hermes)

@@ -39,6 +39,12 @@ huggingface_models:
       - Qwen3.6-27B-MTP-ROCmFP4-STRIX-imatrix-embF16-headQ6.gguf
       - chat_template.jinja
 
+  - name: qwen3.8-27b
+    repository: bartowski/Qwen3.8-27B-GGUF
+    revision: main
+    files:
+      - Qwen3.8-27B-Q5_K_L.gguf
+      - mmproj-Qwen3.8-27B-f16.gguf
   - name: qwen3-coder-next
     repository: unsloth/Qwen3-Coder-Next-GGUF
     revision: main
