@@ -3,13 +3,14 @@ comfy_dir: "{{ home_folder }}/ComfyUI"
 docker_compose_dir: "{{ home_folder }}/docker_compose"
 
 # TODO : update these sometimes ?
-llama_cpp_version: b10343
-llama_swap_version: v249
+llama_cpp_version: b10786
+llama_swap_version: v252
 
 # TODO : maybe a mistral model ? (test mistral-small3.2 and mistralai/Devstral-Small-2-24B-Instruct-2512)
 # TODO : maybe even try unsloth/Mistral-Small-4-119B-2603-GGUF with a small quantization
 # TODO : try OpenLLM-France/Luciole-Instruct-1.1
 # TODO : uncensored model
+# TODO : Muse Glimmer
 
 # this would be used with llama-cpp
 # TODO : move this in vars in the llama-cpp role ?

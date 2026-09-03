@@ -61,12 +61,30 @@
       - golang
     state: present
 
+# - name: Enable RPM Fusion free repository
+#   become: true
+#   ansible.builtin.dnf:
+#     name: >-
+#       https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-{{
+#       ansible_facts.distribution_major_version }}.noarch.rpm
+#     state: present
+#     disable_gpg_check: true
+
+- name: Download RPM Fusion free repository package
+  become: true
+  ansible.builtin.get_url:
+    url: >-
+      https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-{{ ansible_facts.distribution_major_version }}.noarch.rpm
+    dest: >-
+      /var/tmp/rpmfusion-free-release-{{ ansible_facts.distribution_major_version }}.noarch.rpm
+    mode: "0644"
+    force: true
+
 - name: Enable RPM Fusion free repository
   become: true
-  ansible.builtin.dnf:
+  ansible.builtin.dnf5:
     name: >-
-      https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-{{
-      ansible_facts.distribution_major_version }}.noarch.rpm
+      /var/tmp/rpmfusion-free-release-{{ ansible_facts.distribution_major_version }}.noarch.rpm
     state: present
     disable_gpg_check: true
 

@@ -1,17 +1,4 @@
 services:
-  # ollama:
-  #   image: ollama/ollama:rocm
-  #   container_name: ollama
-  #   ports:
-  #     - 11434:11434
-  #   volumes:
-  #     - "{{ home_folder }}/ollama:/root/.ollama:Z"
-  #   devices:
-  #     - "/dev/kfd:/dev/kfd"
-  #     - "/dev/dri:/dev/dri"
-  #   restart: unless-stopped
-
-
   open-webui:
     image: ghcr.io/open-webui/open-webui:main
     container_name: open-webui
