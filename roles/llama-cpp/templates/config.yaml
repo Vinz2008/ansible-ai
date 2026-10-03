@@ -156,6 +156,7 @@ models:
       --min-p 0.0
       --presence-penalty 0.0
       --repeat-penalty 1.0
+    ttl: 3600
 
   qwen3.8-27b-hermes:
     name: "Qwen 3.8 27B Hermes"
