@@ -16,6 +16,8 @@
   ansible.builtin.command:
     cmd: make clean linux-amd64
     chdir: "{{ home_folder }}/llama-swap"
+  environment:
+    GOTOOLCHAIN: auto
   when:
     - system_llama_swap_repository.changed or not system_llama_swap_binary.stat.exists
   changed_when: true
